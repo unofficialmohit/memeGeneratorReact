@@ -1,23 +1,40 @@
 import React from "react";
-import memeData from "./memeData.jsx";
 let arrRandom=[];  
 function Meme(){
     if(arrRandom.length==100)
     {
         arrRandom=[];
     }
-const [allMemeImages,setAllMemeImages]=React.useState(memeData);
+const [allMemeImages,setAllMemeImages]=React.useState([]);
 const [memeImage,setMemeImage]=React.useState(
     {topText:"",
     bottomText:"",
     randomImage:"https://i.imgflip.com/25w3.jpg"}
 );
+
+React.useEffect(()=>{
+
+// fetch("https://api.imgflip.com/get_memes")
+// .then((response)=>{
+// return response.json();
+// })
+// .then((memeFinalData)=>{
+//     setAllMemeImages(memeFinalData.data.memes);
+// })
+async function memeEffect(){
+    const res=await fetch("https://api.imgflip.com/get_memes");
+    const memeFinalData=await res.json();
+    setAllMemeImages(memeFinalData.data.memes);
+}
+memeEffect();
+},[]);
+
 // const [url,setUrl]=React.useState(memeData.data.memes[0].url);
 function getMemeImage(){
 let randomNumber;
 while(true){
 let flag=0;
-randomNumber=Math.floor(Math.random()*100);
+randomNumber=Math.floor(Math.random()*allMemeImages.length);
 for(let key of arrRandom)
 {
 if(randomNumber==key)
@@ -35,7 +52,7 @@ if(flag==0)
 }
 
 }
-let memeArray=allMemeImages.data.memes[randomNumber];
+let memeArray=allMemeImages[randomNumber];
 let randomDataImage=memeArray.url;
 setMemeImage((meme)=>{
     
